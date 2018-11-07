@@ -1,0 +1,12 @@
+<html>
+
+<head><title>Home</title></head>
+
+<body>
+  {{user}}
+  <br>
+  {% for name,id in workspaces %}
+      <a href='workspace/{{id}}'>{{name}}</a>
+  {% endfor %}
+</body>
+</html>

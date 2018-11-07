@@ -15,7 +15,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
+from workspace.views import create, show_workspace, create_channel
+from django.contrib.auth import views as authview
+from users.views import login_user, register_user, log_out
 urlpatterns = [
+    path(r'workspace/create/workspace/<workspace_id>', show_workspace, name='showworkspace'),
+    path(r'login/workspace/<workspace_id>', show_workspace, name='show_workspace'),
+    path('workspace/create/channel/<work_id>', create_channel, name='create_channel'),
+    path('register/', register_user, name='register'),
+    path('logout/', log_out, name='logout'),
+    path('login/', login_user, name='login'),
+    path('workspace/create/', create, name='create'),
     path('admin/', admin.site.urls),
+    path('accounts/profile/', login_user, name='user'),
 ]

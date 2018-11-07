@@ -1,0 +1,24 @@
+<html>
+
+<head><title>Login</title></head>
+
+<body>
+  <form method='POST'>
+    {% csrf_token %}
+    <p>
+      <label>Username: </label>
+      <input type='text' name='email'>
+    </p>
+
+    <p>
+      <label>Password: </label>
+      <input type='password' name='password'>
+    </p>
+
+    <button type="submit">Login</button>
+  </form>
+  {% block error %}
+    {{error}}
+  {% endblock %}
+</body>
+</html>

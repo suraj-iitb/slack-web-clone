@@ -1,5 +1,8 @@
 from django.db import models
-from jsonfield import JSONField
+from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import JSONField
+
+import json
 # Create your models here.
 
 class users(models.Model):
