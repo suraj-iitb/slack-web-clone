@@ -4,9 +4,12 @@
   </head>
   <body>
     {% for ch,id in channels %}
-      <a href='workspace/channel/'{{id}}>{{ch}}</a>
+      <a href='workspace/channel/{{id}}'>{{ch}}</a>
     {% endfor %}
+    {% if isadmin %}
+      <a href='http://127.0.0.1:8000/invite/workspace/{{workid}}'>Invite</a>
+      <a href='http://127.0.0.1:8000/workspace/create/channel/{{workid}}'>Create Channel</a>
+    {% endif %}
 
-    <a href='http://127.0.0.1:8000/workspace/create/channel/{{workid}}'>Create Channel</a>
   </body>
 </html>

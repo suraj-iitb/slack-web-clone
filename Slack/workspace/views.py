@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from users.models import users
 from users import views
 from workspace.models import workspace, Channel
+from Slack.tasks import send_message_task
 import json
 # Create your views here.
 
@@ -23,7 +24,7 @@ def create(request):
         userid = request.session['userid']
         username = request.session['email']
 
-        users = "[{user_id: %s, email: %s, isAdmin:True},]"%(userid, username)
+        users = {'data': [{'user_id': userid, 'email': username, 'isAdmin':True}]}
         channels = {'data':[]}
         users_json = json.dumps(users)
         channels_json = json.dumps(channels)
@@ -38,6 +39,34 @@ def create(request):
     else:
         return render(request, 'create.html', {})
 
+def is_user_admin(workid, userid):
+    work = workspace.objects.get(id=int(workid))
+    print(work)
+    print(workid)
+    print(userid)
+    print(work.users)
+    user_info = work.users
+    print(user_info)
+    user_json = json.loads(user_info)
+
+    for data in user_json['data']:
+        print(data)
+        if int(data['user_id']) == int(userid):
+            return True
+    return False
+
+def invite_workspace(request, workid):
+    user = request.session['userid']
+    if request.method == 'POST':
+
+        if is_user_admin(workid, user):
+            # replace this with send_mail
+            views.create_user(request.POST['email'], "password", workid)
+            return show_workspace(request, workid)
+        else:
+            return HttpResponse("<h1>You are not admin to this workspace</h1>")
+    else:
+        return render(request, 'invite.html', {'workid': workid})
 def show_workspace(request, workspace_id):
     workspaces = workspace.objects.get(id=int(workspace_id))
     workspace_channel = workspaces.channels
@@ -46,10 +75,12 @@ def show_workspace(request, workspace_id):
     channels = []
     for data in workspace_channel_json['data']:
         channels.append([data['name'], data['id']])
-
+    isadmin = is_user_admin(workspace_id, int(request.session['userid']))
+    print(isadmin)
     cont =  {
         'channels': channels,
         'workid': workspace_id,
+        'isadmin': isadmin,
     }
     return render(request, 'workspace.html', context=cont)
 def create_channel(request, work_id):
@@ -74,3 +105,45 @@ def create_channel(request, work_id):
         return show_workspace(request, work_id)
     else:
         return render(request, 'create_channel.html', {'workid':work_id})
+
+def channel_exists_user(user, channel_id):
+    channel = Channel.objects.get(id=channel_id)
+    user_info = channel.users
+    user_json = json.loads(user_info)
+    for data in user_json['data']:
+        if int(data['id']) == user:
+            return True
+    return False
+
+def render_messages(request, channel_id):
+    channel = Channel.objects.get(id=channel_id)
+    message = channel.messages
+    message = json.loads(message)
+    messages = []
+    for data in message['data']:
+        messages.append([data['email'],data['message'],data['replies']])
+    cont = {
+        'messages': messages,
+        'id': channel_id,
+    }
+    return render(request, 'channel.html', context=cont)
+
+def send_message(userid, channel_id, email, message):
+    channel = Channel.objects.get(id=channel_id)
+    mess = channel.messages
+    mess_json = json.loads(mess)
+    mess_info = {'id':userid, 'email': email, 'message':message, 'replies':json.dumps([])}
+    mess_json['data'].append(mess_info)
+
+    channel.messages = json.dumps(mess_json)
+
+    channel.save()
+
+def show_channel(request, channel_id):
+    if request.method == 'POST':
+        send_message_task.delay(request.session['userid'],channel_id, request.session['email'], request.POST['mess'])
+    user = int(request.session['userid'])
+
+    return render_messages(request, channel_id)
+    # else:
+    #     return HttpResponse("<h1>You are not subscribed to this channel</h1>")

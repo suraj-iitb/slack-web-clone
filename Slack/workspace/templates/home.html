@@ -6,7 +6,8 @@
   {{user}}
   <br>
   {% for name,id in workspaces %}
-      <a href='workspace/{{id}}'>{{name}}</a>
+      <a href='workspace/{{id}}'>{{name}}</a>  <a href='http://127.0.0.1:8000/invite/workspace/{{id}}'>invite</a>
+      <br>
   {% endfor %}
 </body>
 </html>

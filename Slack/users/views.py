@@ -2,7 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.contrib.auth import views as authview
 from users.models import users
+from workspace.models import workspace
 import json
+
 # Create your views here.
 
 def login_user(request):
@@ -20,6 +22,23 @@ def login_user(request):
             return render(request, 'login.html', {'error':'Invalid email/password'})
     else:
         return render(request, 'login.html', {})
+
+def create_user(email, password, workid):
+    try:
+        new_user = users.objects.get(email=email)
+    except:
+        work = {'data':[]}
+        new_user = users(email=email, password=password, workspaces=json.dumps(work))
+        new_user.save()
+
+    worksp = workspace.objects.get(id=workid)
+    channel_json = json.loads(worksp.channels)
+
+    work_json = json.loads(new_user.workspaces)
+    work_json['data'].append({'id':workid, 'name': worksp.workspace_name, 'channel_data': json.dumps(work_json)})
+    new_user.workspaces = json.dumps(work_json)
+
+    new_user.save()
 
 
 def register_user(request):
