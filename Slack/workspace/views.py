@@ -126,7 +126,7 @@ def render_messages(request, channel_id):
     message = json.loads(message)
     messages = []
     for data in message['data']:
-        messages.append(data['id'],[data['email'],data['message'],data['replies']])
+        messages.append([data['id'],data['email'],data['message'],data['replies']])
     cont = {
         'messages': messages,
         'id': channel_id,
