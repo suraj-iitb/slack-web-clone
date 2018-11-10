@@ -130,9 +130,20 @@ def render_messages(request, channel_id):
     cont = {
         'messages': messages,
         'id': channel_id,
+        'last_id': get_message_id(channel_id),
     }
     print(messages)
     return render(request, 'channel.html', context=cont)
+
+def delete_message(mess_id, user, roomName):
+    channel = Channel.objects.get(id=roomName)
+    mess = channel.messages
+    mess = json.loads(mess)
+    for i in range(len(mess['data'])):
+        if mess['data'][i]['id'] == int(mess_id):
+            del mess['data'][i]
+    channel.messages = json.dumps(mess)
+    channel.save()
 
 def get_message_id(channel_id):
     channel = Channel.objects.get(id=channel_id)
