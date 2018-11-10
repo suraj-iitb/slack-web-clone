@@ -17,7 +17,7 @@ from django.contrib import admin
 from django.urls import path
 from workspace.views import create, show_workspace, create_channel, invite_workspace, show_channel
 from django.contrib.auth import views as authview
-from users.views import login_user, register_user, log_out
+from users.views import login_user, register_user, log_out, send_data
 urlpatterns = [
     path('workspace/create/channel/workspace/channel/<room_name>', show_channel, name='room'),
     path('invite/workspace/workspace/channel/<room_name>', show_channel, name='room'),
@@ -32,4 +32,6 @@ urlpatterns = [
     path('workspace/create/', create, name='create'),
     path('admin/', admin.site.urls),
     path('accounts/profile/', login_user, name='user'),
+    path('', login_user, name='homepage'),
+    
 ]

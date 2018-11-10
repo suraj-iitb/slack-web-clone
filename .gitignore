@@ -10,4 +10,5 @@ Slack/workspace/.mypy_cache/
 bin/
 include/
 lib/
+Slack/.mypy_cache/
 
