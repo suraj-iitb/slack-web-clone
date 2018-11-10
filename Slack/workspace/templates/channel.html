@@ -2,14 +2,18 @@
 <head><title>Channel</title></head>
 
 <body>
-  {% for author, message, replies in messages %}
-    {{author}} <br>
-    {{message}} <br>
-    {{replies}}
 
+  {% for email, message, replies in messages %}
+    {{email}} <br><a hreh='/delete/message/'
+    {{message}} <br>
+    Replies: <br>
+    {% for rep in replies %}
+      {{ rep }}<br>
+    {% endfor %}
+
+<br>
   {% endfor %}
 
- 
  		<textarea id="chat-log" cols="100" rows="20"></textarea><br/>
        <input type='text' name='mess' id='chat-message-input'>
       <input id="chat-message-submit" type="button" value="Send"/>
