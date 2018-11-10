@@ -1,0 +1,13 @@
+Slack/Slack/__pycache__
+Slack/users/__pycache__
+Slack/workspace/__pycache__
+Slack/Slack/migrations
+Slack/users/migrations
+Slack/workspace/migrations
+Slack/users/.mypy_cache/
+Slack/Slack/.mypy_cache/
+Slack/workspace/.mypy_cache/
+bin/
+include/
+lib/
+
