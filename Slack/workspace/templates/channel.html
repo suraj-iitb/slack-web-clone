@@ -2,15 +2,20 @@
 <head><title>Channel</title></head>
 
 <body>
+
 <div id="chat-log">
   {% for author, message, replies in messages %}
     {{author}} <br>
-    {{message}} <br>
-    {{replies}}
 
+    {{message}} <br>
+    Replies: <br>
+    {% for rep in replies %}
+      {{ rep }}<br>
+    {% endfor %}
+
+<br>
   {% endfor %}
 </div>
-
 
  		<!-- <textarea id="chat-log" cols="100" rows="20"></textarea><br/> -->
        <input type='text' name='mess' id='chat-message-input'>
