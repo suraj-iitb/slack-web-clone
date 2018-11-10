@@ -1,5 +1,6 @@
 # chat/consumers.py
 from channels.generic.websocket import AsyncWebsocketConsumer
+from . import views as workspace_view
 import json
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -9,7 +10,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         print("Room: "+str(self.room_group_name))
         print("Channel: "+str(self.channel_name))
-        
+
         # Join room group
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -29,7 +30,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
-
+        print(text_data_json)
+        print(self.scope['user'])
+        workspace_view.send_message(self.scope['user'], self.room_name,message)
         # Send message to room group
         await self.channel_layer.group_send(
             self.room_group_name,

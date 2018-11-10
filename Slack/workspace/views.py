@@ -3,9 +3,11 @@ from django.http import HttpResponse
 from users.models import users
 from users import views
 from workspace.models import workspace, Channel
+from django.contrib.auth.models import User
 import json
 # Create your views here.
-
+loggedInUser = ""
+loggedInEmail = ""
 def create(request):
     # Identify which user is logged In using request.session
     # Ask user the relevant details
@@ -61,6 +63,10 @@ def invite_workspace(request, workid):
         if is_user_admin(workid, user):
             # replace this with send_mail
             views.create_user(request.POST['email'], "password", workid)
+            work = {'data':[]}
+            user = User.objects.create_user(request.POST.get('email'),request.POST.get('email'),'password')
+            print("user: " + str(user))
+            user.save()
             return show_workspace(request, workid)
         else:
             return HttpResponse("<h1>You are not admin to this workspace</h1>")
@@ -120,28 +126,41 @@ def render_messages(request, channel_id):
     message = json.loads(message)
     messages = []
     for data in message['data']:
-        messages.append([data['email'],data['message'],data['replies']])
+        messages.append([data['id'],data['email'],data['message'],data['replies']])
     cont = {
         'messages': messages,
         'id': channel_id,
-
     }
+    print(messages)
     return render(request, 'channel.html', context=cont)
 
-def send_message(userid, channel_id, email, message):
+def get_message_id(channel_id):
     channel = Channel.objects.get(id=channel_id)
     mess = channel.messages
     mess_json = json.loads(mess)
-    mess_info = {'id':userid, 'email': email, 'message':message, 'replies':json.dumps([])}
-    mess_json['data'].append(mess_info)
+    if len(mess_json['data']) == 0:
+        return 1
+    return int(mess_json['data'][len(mess_json['data'])-1]['id']+1)
 
+
+
+def send_message(email, channel_id, message):
+    channel = Channel.objects.get(id=channel_id)
+    mess = channel.messages
+    print(type(email))
+    mess_json = json.loads(mess)
+    mess_info = {'id': get_message_id(channel_id), 'email': email.username, 'message':message, 'replies':json.dumps([])}
+    mess_json['data'].append(mess_info)
+    print(mess_info)
     channel.messages = json.dumps(mess_json)
 
     channel.save()
 
 def show_channel(request, room_name):
-    user = int(request.session['userid'])
-
+    loggedInUser = int(request.session['userid'])
+    loggedInEmail = request.session['email']
+    print(loggedInUser)
+    print(loggedInEmail)
     return render_messages(request, room_name)
     # else:
     #     return HttpResponse("<h1>You are not subscribed to this channel</h1>")

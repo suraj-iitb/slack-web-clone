@@ -4,18 +4,29 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import views as authview
 from users.models import users
 from workspace.models import workspace
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.models import User
 import json
 
 # Create your views here.
 
 def login_user(request):
+<<<<<<< HEAD
     
     # if 'email' in request.session: 
     #     print(request.session['email'])
     # else:
     #     print("request doesnt exist")
     # request.session.flush()
+=======
+
+>>>>>>> c08d4997231638a8a183e9346de1a4d09cf64a1e
     if request.method == 'POST':
+        request.session.flush()
+        user = authenticate(request,username=request.POST.get('email'), password=request.POST.get('password'))
+        login(request, user)
+        print("kk: " + str(user))
+        print(request.user)
         email = request.POST.get('email')
         password = request.POST.get('password')
         user_login = users.objects.get(email=email, password=password)
@@ -34,6 +45,7 @@ def login_user(request):
             return send_data(request)
         else:
             return render(request, 'login.html', {})
+
 
 def create_user(email, password, workid):
     try:
@@ -58,6 +70,8 @@ def register_user(request):
         work = {'data':[]}
         new_user = users(email=request.POST.get('email'), password=request.POST.get('password'), workspaces=json.dumps(work))
         new_user.save()
+        user = User.objects.create_user(request.POST.get('email'), request.POST.get('email'), request.POST.get('password'))
+        user.save()
         return HttpResponse(new_user.id)
     else:
         return render(request, 'register.html', {})
