@@ -2,15 +2,17 @@
 <head><title>Channel</title></head>
 
 <body>
+<div id="chat-log">
   {% for author, message, replies in messages %}
     {{author}} <br>
     {{message}} <br>
     {{replies}}
 
   {% endfor %}
+</div>
 
- 
- 		<textarea id="chat-log" cols="100" rows="20"></textarea><br/>
+
+ 		<!-- <textarea id="chat-log" cols="100" rows="20"></textarea><br/> -->
        <input type='text' name='mess' id='chat-message-input'>
       <input id="chat-message-submit" type="button" value="Send"/>
 
@@ -27,7 +29,15 @@
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
         var message = data['message'];
-        document.querySelector('#chat-log').value += (message + '\n');
+
+        //p tag cretion
+        var para = document.createElement("p");
+        var node = document.createTextNode(message + '\n');
+        para.appendChild(node);
+        var element = document.getElementById("chat-log");
+        element.appendChild(para);
+
+        // document.querySelector('#chat-log').value += (message + '\n');
     };
 
     chatSocket.onclose = function(e) {
