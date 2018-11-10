@@ -19,10 +19,8 @@ from workspace.views import create, show_workspace, create_channel, invite_works
 from django.contrib.auth import views as authview
 from users.views import login_user, register_user, log_out
 urlpatterns = [
-    path('invite/workspace/workspace/channel/<channel_id>', show_channel, name='show'),
-    path('workspace/create/workspace/workspace/channel/<channel_id>', show_channel, name='show_channel10'),
-    path('workspace/create/channel/workspace/channel/<channel_id>', show_channel, name='show_channel0'),
-    path('login/workspace/workspace/channel/<channel_id>', show_channel, name='show_channel'),
+    path('invite/workspace/workspace/channel/<room_name>', show_channel, name='room'),
+    path(r'login/workspace/workspace/channel/<room_name>', show_channel, name='room'),
     path(r'invite/workspace/<workid>', invite_workspace, name='invite_workspace'),
     path(r'workspace/create/workspace/<workspace_id>', show_workspace, name='showworkspace'),
     path(r'login/workspace/<workspace_id>', show_workspace, name='show_workspace'),

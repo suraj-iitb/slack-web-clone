@@ -27,16 +27,6 @@ SECRET_KEY = '1f@x!x=!g6z512=00aa0^@)1ul_rt%&qsiu8i9h9#gw4v*1nwx'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-# Celery & RabbitMQ Settings
-BROKER_URL = 'amqp://swl:swl@127.0.0.1'
-CELERY_RESULT_BACKEND = 'amqp://127.0.0.1'
-# Celery Data Format
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'Asia/Kolkata'
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,11 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'channels',
     'workspace',
     'users',
 ]
-
+ROOT_URLCONF = 'Slack.urls'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -62,7 +52,7 @@ MIDDLEWARE = [
 
 ]
 
-ROOT_URLCONF = 'Slack.urls'
+
 
 TEMPLATES = [
     {
@@ -81,8 +71,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'Slack.wsgi.application'
-
-
+ASGI_APPLICATION = "Slack.routing.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('127.0.0.1', 6379)],
+        },
+    },
+}
 # Database
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 

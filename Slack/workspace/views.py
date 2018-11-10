@@ -125,6 +125,7 @@ def render_messages(request, channel_id):
     cont = {
         'messages': messages,
         'id': channel_id,
+
     }
     return render(request, 'channel.html', context=cont)
 
@@ -139,11 +140,9 @@ def send_message(userid, channel_id, email, message):
 
     channel.save()
 
-def show_channel(request, channel_id):
-    if request.method == 'POST':
-        send_message_task.delay(request.session['userid'],channel_id, request.session['email'], request.POST['mess'])
+def show_channel(request, room_name):
     user = int(request.session['userid'])
 
-    return render_messages(request, channel_id)
+    return render_messages(request, room_name)
     # else:
     #     return HttpResponse("<h1>You are not subscribed to this channel</h1>")
