@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from users.models import users
 from users import views
 from workspace.models import workspace, Channel
-from Slack.tasks import send_message_task
 import json
 # Create your views here.
 
