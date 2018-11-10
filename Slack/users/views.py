@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth import views as authview
 from users.models import users
 from workspace.models import workspace
@@ -8,7 +9,12 @@ import json
 # Create your views here.
 
 def login_user(request):
-    request.session.flush()
+    
+    # if 'email' in request.session: 
+    #     print(request.session['email'])
+    # else:
+    #     print("request doesnt exist")
+    # request.session.flush()
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -19,9 +25,15 @@ def login_user(request):
 
             return send_data(request)
         else:
+            request.session.flush()
             return render(request, 'login.html', {'error':'Invalid email/password'})
     else:
-        return render(request, 'login.html', {})
+        # print(request.session['userid'])
+        if request.session.has_key('userid'):
+            print("\n\nhello\n\n")
+            return send_data(request)
+        else:
+            return render(request, 'login.html', {})
 
 def create_user(email, password, workid):
     try:
@@ -56,7 +68,7 @@ def log_out(request):
         del request.session['email']
     except KeyError:
         pass
-    return render(request, 'home.html', {'user': 'Not logged In'})
+    return HttpResponseRedirect("/")
 
 def append_workspace(userid, id, name, channels):
 
