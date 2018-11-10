@@ -11,20 +11,10 @@ import json
 # Create your views here.
 
 def login_user(request):
-<<<<<<< HEAD
-    
-    # if 'email' in request.session: 
-    #     print(request.session['email'])
-    # else:
-    #     print("request doesnt exist")
-    # request.session.flush()
-=======
-
->>>>>>> c08d4997231638a8a183e9346de1a4d09cf64a1e
     if request.method == 'POST':
         request.session.flush()
         user = authenticate(request,username=request.POST.get('email'), password=request.POST.get('password'))
-        login(request, user)
+        #login(request, user)
         print("kk: " + str(user))
         print(request.user)
         email = request.POST.get('email')
