@@ -44,8 +44,6 @@
 
   </style>
   <script>
-    var channelindex=1;
-    var messageindex=1;
     var workspaceindex=1;
 
     function createWorkspace() {
@@ -59,26 +57,6 @@
       }
 
 
-    function createMessage() {
-        var mydiv = document.getElementById("message");
-        var aTag = document.createElement('a');
-        aTag.setAttribute('href',"chat.html");
-        aTag.setAttribute('class','3-bar-item w3-button w3-block');        
-        aTag.innerHTML = "contact name"+messageindex;
-        mydiv.appendChild(aTag);
-        messageindex=messageindex+1;
-      }
-
-
-    function createChannel() {
-        var mydiv = document.getElementById("channel");
-        var aTag = document.createElement('a');
-        aTag.setAttribute('href',"chat.html");
-        aTag.setAttribute('class','3-bar-item w3-button w3-block');        
-        aTag.innerHTML = "channel name"+channelindex;
-        mydiv.appendChild(aTag);
-        channelindex=channelindex+1;
-      }
     </script>
 <body>
 
@@ -89,19 +67,13 @@
   <h6><a href="#" class="w3-bar-item w3-button w3-grey">WorkSpace</a></h6>
   <div id = "workspace">
     </div>
-    <div class="w3-bar-item w3-button w3-black w3-block" onclick="createChannel()">create channel</div>
-  <h6><a href="#" class="w3-bar-item w3-button w3-grey">Channels</a></h6>
-  <div id = "channel">
-  </div>
-  <div class="w3-bar-item w3-button w3-black w3-block" onclick="createMessage()">send Message</div>  
-  <h6><a href="#" class="w3-bar-item w3-button w3-grey">Direct Messages</a></h6>
-  <div id = "message">
-    </div>
 </div>
 
 <div style="margin-left:25%">
 <div class="w3-container w3-pale-blue">
   <h1>SLACK</h1>
 </div>
+<h2>WELCOME TO SLACK</h2>  
 </body>
 </html>
+

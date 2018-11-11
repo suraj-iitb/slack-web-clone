@@ -47,6 +47,60 @@
     var channelindex=1;
     var messageindex=1;
     var workspaceindex=1;
+     username1 = 'ABHISHEK';
+     username2 = 'SURAJ' ;
+     serverinput = 'hello';
+     receiverinput = 'hi';
+    
+    function sendmessage()
+    {
+      receiverinput = document.forms['fname']['last'].value;
+      var inputtext = document.createTextNode(receiverinput);
+      var d = new Date();
+      var h = d.getHours();
+ 	    var m = d.getMinutes();
+      var dashcontainer = document.createElement('div');
+      dashcontainer.setAttribute('class','container');
+      var user1 = document.createElement('b');
+      user1.innerHTML=username1;
+      dashcontainer.appendChild(user1); 
+      var message = document.createElement('p');
+      message.setAttribute('style','word-wrap:break-all');
+      message.setAttribute('align','right')
+      message.appendChild(inputtext);
+      dashcontainer.appendChild(message);
+      var time = document.createElement('span');
+      time.setAttribute('class','time-left')
+      time.innerHTML='<p>'+h+':'+m+'</p>';
+      dashcontainer.appendChild(time);
+      var mydiv = document.getElementById("chatmessages");
+      mydiv.appendChild(dashcontainer);  
+
+    }
+    
+    function recievemessage()
+    {
+      var d = new Date();
+      var h = d.getHours();
+ 	    var m = d.getMinutes();
+      var dashcontainer = document.createElement('div');
+      dashcontainer.setAttribute('class','container darker');
+      var user1 = document.createElement('b');
+      user1.innerHTML=username2;
+      dashcontainer.appendChild(user1);
+      var message = document.createElement('p');
+      message.setAttribute('style','word-wrap:break-all');
+      message.setAttribute('align','left')
+      message.innerHTML=serverinput;
+      dashcontainer.appendChild(message);
+      var time = document.createElement('span');
+      time.setAttribute('class','time-right')
+      time.innerHTML='<p>'+h+':'+m+'</p>';
+      dashcontainer.appendChild(time);
+      var mydiv = document.getElementById("chatmessages");
+      mydiv.appendChild(dashcontainer);  
+
+    }
 
     function createWorkspace() {
         var mydiv = document.getElementById("workspace");
@@ -103,5 +157,16 @@
 <div class="w3-container w3-pale-blue">
   <h1>SLACK</h1>
 </div>
+<h2>Chat Messages</h2>  
+<div id='chatmessages'>
+</div>
+<div id="inputbox">
+<form class="w3-container w3-card-4" name='fname'>
+    <input id = 'readinput' class="w3-input w3-border" name="last" type="text">
+    <button class="w3-button w3-blue" type='button' onclick="sendmessage()">Send Message</button>
+    <button class="w3-button w3-blue" type='button' onclick="recievemessage()">Recieve Message</button>
+  </form>
+</div>
 </body>
 </html>
+
