@@ -2,9 +2,14 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from users.models import users
 from users import views
-from workspace.models import workspace, Channel
+from workspace.models import workspace, Channel, oneo1
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.conf import settings
+import uuid
 import json
+import asyncio
+import smtplib
 # Create your views here.
 loggedInUser = ""
 loggedInEmail = ""
@@ -56,17 +61,106 @@ def is_user_admin(workid, userid):
             return True
     return False
 
+def oneexists(request, userid):
+    try:
+        userc = ""
+        if int(request.session['userid']) < int(userid):
+            userc = userc + str(request.session['userid']) + str(userid)
+        else:
+            userc = userc + str(userid) +  str(request.session['userid'])
+        one = oneo1.objects.get(useroneo=userc,usertwoo='')
+
+        return True
+    except:
+        return False
+
+def render_one(request, userid):
+    userc = ""
+    if int(request.session['userid']) < int(userid):
+        userc = userc + str(request.session['userid']) + str(userid)
+    else:
+        userc = userc + str(userid) +  str(request.session['userid'])
+    one = oneo1.objects.get(useroneo=userc,usertwoo='')
+    one_messages = one.messages
+    mess = []
+    for data in json.loads(one_messages)['data']:
+        mess.append([data['author'], data['message']])
+    cont = {
+        'id': one.useroneo,
+        'messages':mess,
+    }
+    return render(request, 'oneone.html',context=cont)
+
+def one_Create(request, userid):
+    if oneexists(request, userid):
+        return render_one(request, userid)
+    userc = ""
+    if int(request.session['userid']) < int(userid):
+        userc = userc + str(request.session['userid']) + str(userid)
+    else:
+        userc = userc + str(userid) +  str(request.session['userid'])
+    one = oneo1(useroneo=userc, usertwoo='', messages=json.dumps({'data':[]}))
+    one.save()
+    return render_one(request, userid)
+
+def get_random_password():
+    random = str(uuid.uuid4()) # Convert UUID format to a Python string.
+    random = random.upper() # Make all characters uppercase.
+    random = random.replace("-","") # Remove the UUID '-'.
+    return random[0:6]
+
+def accept_invite(request, emailid, workid, passw):
+    views.create_user(emailid, passw, workid)
+    work = {'data':[]}
+    user = User.objects.create_user(emailid,emailid,passw)
+    print("user: " + str(user))
+    user.save()
+    user_id = users.objects.get(email=emailid).id
+    workspa = workspace.objects.get(id=workid)
+    work_users = workspa.users
+    work_users = json.loads(work_users)
+    work_users['data'].append({'user_id':user_id, 'email':emailid, 'isAdmin': False})
+    workspa.users = json.dumps(work_users)
+    workspa.save()
+    return show_workspace(request, workid)
+def send_mail_dec(subject, message, email_from, rec_list):
+    # send_mail(subject, message, email_from, rec_list)
+    smtpob = smtplib.SMTP('smtp.gmail.com:587')
+    smtpob.starttls()
+    smtpob.login('slack.sl.iitb@gmail.com', 'IITBSLACK')
+    smtpob.sendmail(email_from, rec_list, message)
+    smtpob.quit()
+
+
 def invite_workspace(request, workid):
     user = request.session['userid']
     if request.method == 'POST':
 
         if is_user_admin(workid, user):
             # replace this with send_mail
-            views.create_user(request.POST['email'], "password", workid)
-            work = {'data':[]}
-            user = User.objects.create_user(request.POST.get('email'),request.POST.get('email'),'password')
-            print("user: " + str(user))
-            user.save()
+            # views.create_user(request.POST['email'], "password", workid)
+            # work = {'data':[]}
+            # user = User.objects.create_user(request.POST.get('email'),request.POST.get('email'),'password')
+            # print("user: " + str(user))
+            # user.save()
+            # user_id = users.objects.get(email=request.POST.get('email')).id
+            # workspa = workspace.objects.get(id=workid)
+            # work_users = workspa.users
+            # work_users = json.loads(work_users)
+            # work_users['data'].append({'user_id':user_id, 'email':request.POST.get('email'), 'isAdmin': False})
+            # workspa.users = json.dumps(work_users)
+            # workspa.save()
+
+            subject = 'Slack : Invited to a Workspace'
+            message = 'You have been invited to the following workspace. Click the link below to accept\n'
+            message = message + 'http://127.0.0.1:8000/workspace/accept/' + request.POST['email'] + "/" + workid + "/"+get_random_password() +'\n'
+
+            email_from = settings.EMAIL_HOST_USER
+
+            recipient_list = [request.POST.get('email')]
+            print(recipient_list)
+            send_mail_dec(subject, message, email_from, recipient_list)
+
             return show_workspace(request, workid)
         else:
             return HttpResponse("<h1>You are not admin to this workspace</h1>")
@@ -82,9 +176,16 @@ def show_workspace(request, workspace_id):
         channels.append([data['name'], data['id']])
     isadmin = is_user_admin(workspace_id, int(request.session['userid']))
     print(isadmin)
+    u = []
+    wok = json.loads(workspaces.users)['data']
+    print(wok)
+    for data in wok:
+        u.append([data['user_id'], data['email']])
+    print(u)
     cont =  {
         'channels': channels,
         'workid': workspace_id,
+        'users': u,
         'isadmin': isadmin,
     }
     return render(request, 'workspace.html', context=cont)
@@ -142,6 +243,7 @@ def delete_message(mess_id, user, roomName):
     for i in range(len(mess['data'])):
         if mess['data'][i]['id'] == int(mess_id):
             del mess['data'][i]
+            break
     channel.messages = json.dumps(mess)
     channel.save()
 

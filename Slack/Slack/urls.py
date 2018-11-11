@@ -15,10 +15,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from workspace.views import create, show_workspace, create_channel, invite_workspace, show_channel
+from workspace.views import create, show_workspace, create_channel, invite_workspace, show_channel, one_Create,accept_invite
 from django.contrib.auth import views as authview
 from users.views import login_user, register_user, log_out, send_data
 urlpatterns = [
+    path('workspace/accept/<emailid>/<workid>/<passw>', accept_invite, name='accept'),
+    path('workspace/user/<userid>', one_Create, name='one'),
+    path('workspace/<room_name>', show_channel, name='room'),
     path('workspace/create/channel/workspace/channel/<room_name>', show_channel, name='room'),
     path('invite/workspace/workspace/channel/<room_name>', show_channel, name='room'),
     path(r'login/workspace/workspace/channel/<room_name>', show_channel, name='room'),
@@ -33,5 +36,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/profile/', login_user, name='user'),
     path('', login_user, name='homepage'),
-    
+
 ]

@@ -4,8 +4,8 @@
 <body>
 
 <div id="chat-log">
-  {% for id,author, message, replies in messages %}
-    <p id={{id}}>{{author}}
+  {% for author, message in messages %}
+    <p>{{author}}
       {{message}}
     </p>
   {% endfor %}
@@ -21,11 +21,8 @@
 
     var chatSocket = new WebSocket(
         'ws://' + window.location.host +
-        '/ws/chat/' + roomName + '/');
-    var remChatSocket = new WebSocket(
-      'ws://' + window.location.host +
-      '/ws/chat/delete/' + roomName + '/'
-    );
+        '/ws/chat/one/' + roomName + '/');
+
     // var threadChatSocket = new WebSocket(
     //   'ws://' + window.location.host +
     //   '/ws/chat/thread/' + roomName + '/'
@@ -105,78 +102,6 @@
     };
 
 
-    remChatSocket.onmessage = function(e) {
-        var data = JSON.parse(e.data);
-        var id1 = data['message'];
-
-        //p tag cretion
-          var parent = document.getElementById("chat-log");
-          var child = document.getElementById(id1);
-
-          parent.removeChild(child);
-          parent.removeChild(id1)
-
-        // document.querySelector('#chat-log').value += (message + '\n');
-    };
-
-    remchatSocket.onclose = function(e) {
-        console.error('Chat socket closed unexpectedly');
-    };
-
-    document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function(e) {
-        if (e.keyCode === 13) {  // enter, return
-            document.querySelector('#chat-message-submit').click();
-        }
-    };
-    function send_id(id1) {
-      var messid = id1;
-      remChatSocket.send(JSON.stringify({
-        'message': messid,
-      }))
-    };
-    // document.querySelector('#chat-message-submit').onclick = function(e) {
-    //     var messageInputDom = document.querySelector('#chat-message-input');
-    //     var message = messageInputDom.value;
-    //     chatSocket.send(JSON.stringify({
-    //         'message': message
-    //     }));
-    //
-    //     messageInputDom.value = '';
-    // };
-
-    // threadChatSocket.onmessage = function(e) {
-    //     ar data = JSON.parse(e.data);
-    //     var message = data['message'];
-    //     var email = data['email'];
-    //     //p tag cretion
-    //     // var para = document.createElement("p");
-    //     // var attr = document.createAttribute("id");
-    //     // attr.value = lastid;
-    //     // para.setAttributeNode(attr)
-    //     // var node = document.createTextNode(email + ":   "+message);
-    //     // para.appendChild(node);
-    //     // var element = document.getElementById("chat-log");
-    //     // element.appendChild(para);
-    // };
-
-    // threadChatSocket.onclose = function(e) {
-    //     console.error('Chat socket closed unexpectedly');
-    // };
-
-    // document.querySelector('#chat-message-input').focus();
-    // document.querySelector('#chat-message-input').onkeyup = function(e) {
-    //     if (e.keyCode === 13) {  // enter, return
-    //         document.querySelector('#chat-message-submit').click();
-    //     }
-    // };
-    function start_thread(id1) {
-      var messid = id1;
-      // threadChatSocket.send(JSON.stringify({
-      //   'message': messid,
-      // }))
-      window.open("home.html");
-    };
 
 </script>
 </html>

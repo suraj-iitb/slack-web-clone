@@ -14,7 +14,7 @@ def login_user(request):
     if request.method == 'POST':
         request.session.flush()
         user = authenticate(request,username=request.POST.get('email'), password=request.POST.get('password'))
-        #login(request, user)
+        login(request, user)
         print("kk: " + str(user))
         print(request.user)
         email = request.POST.get('email')
@@ -31,8 +31,8 @@ def login_user(request):
     else:
         # print(request.session['userid'])
         if request.session.has_key('userid'):
-            print("\n\nhello\n\n")
-            return send_data(request)
+            return render(request, 'login.html', {})
+            # return send_data(request)
         else:
             return render(request, 'login.html', {})
 

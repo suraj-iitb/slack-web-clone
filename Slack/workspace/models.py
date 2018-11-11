@@ -11,6 +11,12 @@ class Channel(models.Model):
      users = JSONField(default=None)
      messages = JSONField(default=None)
 
+class oneo1(models.Model):
+
+    id = models.AutoField(primary_key=True)
+    useroneo = models.CharField(max_length=20, default="")
+    usertwoo = models.CharField(max_length=20, default="")
+    messages = JSONField(default=None)
 
 class workspace(models.Model):
 
