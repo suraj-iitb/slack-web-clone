@@ -1,0 +1,62 @@
+<html>
+<head><title>Thread</title></head>
+
+<body>
+
+<div id="chat-log">
+  {% for reply in replies %}
+    <p>{{reply}}</p>
+  {% endfor %}
+</div>
+
+ 		<!-- <textarea id="chat-log" cols="100" rows="20"></textarea><br/> -->
+       <input type='text' name='mess' id='chat-message-input'>
+      <input id="chat-message-submit" type="button" value="Send"/>
+
+</body>
+<script>
+    var channelName = {{channel_id}}
+    var roomName = {{ messid }};
+    var threadChatSocket = new WebSocket(
+      'ws://' + window.location.host +
+      '/ws/chat/thread/' + channelName + '/' + roomName + '/'
+    );
+
+    threadChatSocket.onmessage = function(e) {
+
+        var data = JSON.parse(e.data);
+        var id1 = data['message'];
+
+        var para = document.createElement("p");
+        var attr = document.createAttribute("id");
+        attr.value = "1";
+        para.setAttributeNode(attr)
+        var node = document.createTextNode(id1);
+        para.appendChild(node);
+        var element = document.getElementById("chat-log");
+        element.appendChild(para);
+
+        };
+
+    threadChatSocket.onclose = function(e) {
+        console.error('threadChat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function(e) {
+        var messageInputDom = document.querySelector('#chat-message-input');
+        var message = messageInputDom.value;
+        threadChatSocket.send(JSON.stringify({
+            'message': message
+        }));
+
+        messageInputDom.value = '';
+    };
+
+</script>
