@@ -3,79 +3,167 @@
 <title>W3.CSS</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<script type='text/javascript' src='https://cdn.scaledrone.com/scaledrone.min.js'></script>
-<!--<script type='text/javascript' src='http://0.0.0.0:8080/scaledrone.js'></script>-->
 <meta charset="utf-8">
 <style>
-      .members-count,
-    .members-list,
-    .messages {
-      border: 1px solid #e4e4e4;
-      padding: 15px;
-      margin-bottom: 15px;
-    }
+     #inputbox {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
 
-    .messages {
-      flex-shrink: 1;
-      overflow: auto;
-    }
+    .container {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
 
-    .message {
-      padding: 5px 0;
-    }
-    .message .member {
-      display: inline-block;
-    }
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
 
-    .member {
-      padding-right: 10px;
-      position: relative;
-    }
+.container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
 
-    .message-form {
-      display: flex;
-      flex-shrink: 0;
-    }
-    .message-form__input {
-      flex-grow: 1;
-      border: 1px solid #dfdfdf;
-      padding: 10px 15px;
-      font-size: 16px;
-    }
-    .message-form__button {
-      margin: 10px;
-    }
+
+
+.time-right {
+    float: right;
+    color: #aaa;
+}
+
+.time-left {
+    float: left;
+    color: #999;
+}
+
   </style>
+  <script>
+    var channelindex=1;
+    var messageindex=1;
+    var workspaceindex=1;
+     username1 = 'ABHISHEK';
+     username2 = 'SURAJ' ;
+     serverinput = 'hello';
+     receiverinput = 'hi';
+    
+    function sendmessage()
+    {
+      receiverinput = document.forms['fname']['last'].value;
+      var inputtext = document.createTextNode(receiverinput);
+      var d = new Date();
+      var h = d.getHours();
+ 	    var m = d.getMinutes();
+      var dashcontainer = document.createElement('div');
+      dashcontainer.setAttribute('class','container');
+      var user1 = document.createElement('b');
+      user1.innerHTML=username1;
+      dashcontainer.appendChild(user1); 
+      var message = document.createElement('p');
+      message.setAttribute('align','right')
+      message.appendChild(inputtext);
+      dashcontainer.appendChild(message);
+      var time = document.createElement('span');
+      time.setAttribute('class','time-left')
+      time.innerHTML='<p>'+h+':'+m+'</p>';
+      dashcontainer.appendChild(time);
+      var mydiv = document.getElementById("chatmessages");
+      mydiv.appendChild(dashcontainer);  
+
+    }
+    
+    function recievemessage()
+    {
+      var d = new Date();
+      var h = d.getHours();
+ 	    var m = d.getMinutes();
+      var dashcontainer = document.createElement('div');
+      dashcontainer.setAttribute('class','container darker');
+      var user1 = document.createElement('b');
+      user1.innerHTML=username2;
+      dashcontainer.appendChild(user1);
+      var message = document.createElement('p');
+      message.setAttribute('align','left')
+      message.innerHTML=serverinput;
+      dashcontainer.appendChild(message);
+      var time = document.createElement('span');
+      time.setAttribute('class','time-right')
+      time.innerHTML='<p>'+h+':'+m+'</p>';
+      dashcontainer.appendChild(time);
+      var mydiv = document.getElementById("chatmessages");
+      mydiv.appendChild(dashcontainer);  
+
+    }
+
+    function createWorkspace() {
+        var mydiv = document.getElementById("workspace");
+        var aTag = document.createElement('a');
+        aTag.setAttribute('href',"yourlink.htm");
+        aTag.setAttribute('class','3-bar-item w3-button w3-block');        
+        aTag.innerHTML = "Workspace"+workspaceindex;
+        mydiv.appendChild(aTag);
+        workspaceindex=workspaceindex+1;
+      }
+
+
+    function createMessage() {
+        var mydiv = document.getElementById("message");
+        var aTag = document.createElement('a');
+        aTag.setAttribute('href',"yourlink.htm");
+        aTag.setAttribute('class','3-bar-item w3-button w3-block');        
+        aTag.innerHTML = "contact name"+messageindex;
+        mydiv.appendChild(aTag);
+        messageindex=messageindex+1;
+      }
+
+
+    function createChannel() {
+        var mydiv = document.getElementById("channel");
+        var aTag = document.createElement('a');
+        aTag.setAttribute('href',"yourlink.htm");
+        aTag.setAttribute('class','3-bar-item w3-button w3-block');        
+        aTag.innerHTML = "channel name"+channelindex;
+        mydiv.appendChild(aTag);
+        channelindex=channelindex+1;
+      }
+    </script>
 <body>
 
 <!-- Sidebar -->
 <div class="w3-sidebar w3-light-grey w3-bar-block" style="width:25%">
   <h3><a href="#" class="w3-bar-item w3-button w3-blue-gray">User Name</a></h3>
+  <div class="w3-bar-item w3-button w3-black w3-block" onclick="createWorkspace()">create workspace</div>
+  <h6><a href="#" class="w3-bar-item w3-button w3-grey">WorkSpace</a></h6>
+  <div id = "workspace">
+    </div>
+    <div class="w3-bar-item w3-button w3-black w3-block" onclick="createChannel()">create channel</div>
   <h6><a href="#" class="w3-bar-item w3-button w3-grey">Channels</a></h6>
-  <a href="#" class="w3-bar-item w3-button">Channel 1</a>
-  <a href="#" class="w3-bar-item w3-button">Channel 2</a>
-  <a href="#" class="w3-bar-item w3-button">Channel 3</a>
+  <div id = "channel">
+  </div>
+  <div class="w3-bar-item w3-button w3-black w3-block" onclick="createMessage()">send Message</div>  
   <h6><a href="#" class="w3-bar-item w3-button w3-grey">Direct Messages</a></h6>
-  <a href="#" class="w3-bar-item w3-button">Messages1</a>
-  <a href="#" class="w3-bar-item w3-button">Messages2</a>
-  <a href="#" class="w3-bar-item w3-button">Messages3</a>
+  <div id = "message">
+    </div>
 </div>
 
 <div style="margin-left:25%">
-
 <div class="w3-container w3-pale-blue">
   <h1>SLACK</h1>
 </div>
 <h2>Chat Messages</h2>  
-
-<div class="members-count">-</div>
-  <div class="members-list">-</div>
-  <div class="messages"></div>
-  <form class="message-form" onsubmit="return false;">
-    <input class="message-form__input" placeholder="Type a message.." type="text"/>
-    <input class="message-form__button" value="Send" type="submit"/>
+<div id='chatmessages'>
+</div>
+<div id="inputbox">
+<form class="w3-container w3-card-4" name='fname'>
+    <input id = 'readinput' class="w3-input w3-border" name="last" type="text">
+    <button class="w3-button w3-blue" type='button' onclick="sendmessage()">Send Message</button>
+    <button class="w3-button w3-blue" type='button' onclick="recievemessage()">Recieve Message</button>
   </form>
 </div>
-<script src="./script.js"></script>
 </body>
 </html>
