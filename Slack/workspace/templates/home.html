@@ -1,14 +1,119 @@
+<!DOCTYPE html>
 <html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-<head><title>Home</title></head>
+<style>
+* {
+  box-sizing: border-box;
+}
 
+#myInput {
+  background-image: url('./search.png');
+  background-size: 1.5em 1.5em;
+  background-position: 0.5em 0.5em;
+  background-repeat: no-repeat;
+  width: 100%;
+  font-size: 16px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+  list-style-type: none;
+  padding: 0;
+  margin: z;
+}
+
+#myUL li a{
+  border: 1px solid #ddd;
+  margin-top: -1px; /* Prevent double borders */
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block
+}
+
+#myUL li a:hover:not(.header) {
+  background-color: #bbb;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: bold;
+  color: #FFF;
+}
+
+.icon-bar {
+    width: 100%;
+    background-color: #555;
+    overflow: auto;
+}
+
+.icon-bar a{
+    float: left;
+    width: 2em;
+    text-align: center;
+    padding: 0px 0px;
+    transition: all 0.3s ease;
+    color: white;
+    font-size: 2em;
+}
+
+.icon-bar a:hover {
+    background-color: #000;
+}
+
+.active {
+    background-color: #4CAF50;
+}
+</style>
+</head>
 <body>
-  {{user}}<a href='http://127.0.0.1:8000/logout'>logout</a>
-  <br>
+
+<header class="w3-container w3-purple">
+  <span style="float:left; font-size:3em;">{{user}}</span>
+  <span class="icon-bar">
+  <a href="http://127.0.0.1:8000/workspace/create/"><i class="fa fa-plus" style="margin: 0.7em 0px 0.7em 0px"></i></a> 
+  <a href="#"><i class="fa fa-trash" style="margin: 0.7em 0px 0.7em 0px"></i></a> 
+  </span>
+  <span style="vertical-align:center;">
+  <a href="http://127.0.0.1:8000/logout" class="w3-button w3-red" style = "float:right;font-size:1em;margin: 1em 0px 1em 0px">LOG OUT</a>
+  </span>
+</header>
+
+<input type="text" id="myInput" onkeyup="filter()" placeholder="Search for names.." title="Type in a name">
+
+<ul id="myUL">
   {% for name,id in workspaces %}
-      <a href='workspace/{{id}}'>{{name}}</a>  <a href='http://127.0.0.1:8000/invite/workspace/{{id}}'>invite</a>
-      
-      <br>
+  <li>
+      <a href="/workspace/create/workspace/{{id}}">{{name}}</a>
+  </li>
   {% endfor %}
+</ul>
+
+<script>
+function filter() {
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myUL");
+    li = ul.getElementsByTagName("li");
+    for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName("a")[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+            li[i].style.display = "";
+        } else {
+            li[i].style.display = "none";
+        }
+    }
+}
+</script>
+
 </body>
 </html>

@@ -31,8 +31,8 @@ def login_user(request):
     else:
         # print(request.session['userid'])
         if request.session.has_key('userid'):
-            return render(request, 'login.html', {})
-            # return send_data(request)
+            # return render(request, 'login.html', {})
+            return send_data(request)
         else:
             return render(request, 'login.html', {})
 
