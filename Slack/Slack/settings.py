@@ -85,12 +85,10 @@ CHANNEL_LAYERS = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'slack',
-        'USER': 'swl',
-        'PASSWORD': 'swl',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql',
+        'DATABASE_URL': 'suraj:///slack',
+        'ATOMIC_REQUESTS': True,
+        'NAME': 'slack'
     }
 }
 
