@@ -11,4 +11,4 @@ bin/
 include/
 lib/
 Slack/.mypy_cache/
-
+.mypy_cache/
