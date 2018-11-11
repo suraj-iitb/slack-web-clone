@@ -26,10 +26,7 @@
       'ws://' + window.location.host +
       '/ws/chat/delete/' + roomName + '/'
     );
-    // var threadChatSocket = new WebSocket(
-    //   'ws://' + window.location.host +
-    //   '/ws/chat/thread/' + roomName + '/'
-    // );
+
     var lastid = {{last_id}}
     chatSocket.onmessage = function(e) {
         var data = JSON.parse(e.data);
@@ -63,19 +60,18 @@
         // var element = document.getElementById("chat-log");
         element.appendChild(inp);
          //thread tag cretion
-        var inp1 = document.createElement("input");
-        var attr5 = document.createAttribute("id");
-        attr5.value = lastid;
+
+        var inp1 = document.createElement("A");
+        var ak = document.createAttribute('id');
+        ak.value=lastid
+        inp1.setAttributeNode(ak)
+        var attr5 = document.createAttribute("href");
+        attr5.value = "http://127.0.0.1:8000/workspace/{{id}}/"+lastid;
+
         inp1.setAttributeNode(attr5)
-        var attr6 = document.createAttribute("type");
-        attr6.value = "button";
-        inp1.setAttributeNode(attr6)
-        var attr7 = document.createAttribute("value");
-        attr7.value = "thread";
-        inp1.setAttributeNode(attr7)
-        var attr8 = document.createAttribute("onClick");
-        attr8.value = "start_thread(this.id)";
-        inp1.setAttributeNode(attr8)
+        inp1.appendChild(document.createTextNode("Tutorials"))
+
+
 
         // var element = document.getElementById("chat-log");
         element.appendChild(inp1);
@@ -119,7 +115,7 @@
         // document.querySelector('#chat-log').value += (message + '\n');
     };
 
-    remchatSocket.onclose = function(e) {
+    remChatSocket.onclose = function(e) {
         console.error('Chat socket closed unexpectedly');
     };
 
@@ -170,13 +166,7 @@
     //         document.querySelector('#chat-message-submit').click();
     //     }
     // };
-    function start_thread(id1) {
-      var messid = id1;
-      // threadChatSocket.send(JSON.stringify({
-      //   'message': messid,
-      // }))
-      window.open("home.html");
-    };
+
 
 </script>
 </html>

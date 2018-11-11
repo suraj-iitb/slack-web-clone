@@ -256,6 +256,31 @@ def get_message_id(channel_id):
     return int(mess_json['data'][len(mess_json['data'])-1]['id']+1)
 
 
+def save_reply(channelid, messageid, message):
+    ch = Channel.objects.get(id=channelid)
+    i = 0;
+    repli_data = json.loads(ch.messages)['data']
+
+    for data in repli_data:
+
+        if data['id'] == int(messageid):
+            #rep_json = json.loads(data)
+            break
+        i = i+1
+
+    mess = ch.messages
+    mess_json = json.loads(mess)
+    mess_data = mess_json['data']
+    mess_rep = json.loads(mess_data[i]['replies'])
+    mess_rep.append(message)
+
+    mess_data[i]['replies'] = json.dumps(mess_rep)
+    mess_json['data'] = mess_data
+    mess = mess_json
+    ch.messages = json.dumps(mess)
+    ch.save()
+
+
 
 def send_message(email, channel_id, message):
     channel = Channel.objects.get(id=channel_id)
@@ -268,7 +293,22 @@ def send_message(email, channel_id, message):
     channel.messages = json.dumps(mess_json)
 
     channel.save()
-
+def show_thread(request, channelid, messageid):
+    replies = []
+    ch = Channel.objects.get(id=channelid)
+    repli_data = json.loads(ch.messages)
+    print(repli_data['data'])
+    for data in repli_data['data']:
+        if data['id'] == int(messageid):
+            #rep_json = json.loads(data)
+            re_rep = data['replies']
+            replies.append(re_rep)
+    cont = {
+        'channel_id':channelid,
+        'messid':messageid,
+        'replies': replies,
+    }
+    return render(request, 'thread.html', context=cont)
 def show_channel(request, room_name):
     loggedInUser = int(request.session['userid'])
     loggedInEmail = request.session['email']
