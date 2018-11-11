@@ -26,6 +26,14 @@ SECRET_KEY = '1f@x!x=!g6z512=00aa0^@)1ul_rt%&qsiu8i9h9#gw4v*1nwx'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'slack.sl.iitb@gmail.com'
+EMAIL_HOST_PASSWORD = 'IITBSLACK'
+
+
 ALLOWED_HOSTS = []
 # Application definition
 
