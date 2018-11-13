@@ -1,0 +1,18 @@
+<html>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <body>
+    <form class="w3-container" method='POST'>
+        {% csrf_token %}<!--
+        <input type='password' name='password'>
+        <input type='password' name='repassword'>
+        <button type='submit' name='submit'>Change</button> -->
+            <label class="w3-text-blue"><b>Enter Password</b></label>
+    <input class="w3-input w3-border" name="password" style = "width:25%;" type="password">
+
+    <label class="w3-text-blue"><b>Confirm Password</b></label>
+    <input class="w3-input w3-border" name="repassword" style = "width:25%;" type="password"></br>
+    <!--<h6><a href="workspace.html" class="w3-bar-item w3-button w3-grey">LOGIN</a></h6>-->
+    <button type="submit" class="w3-bar-item w3-button w3-grey" name='submit'>Change</button>
+    </form>
+  </body>
+</html>

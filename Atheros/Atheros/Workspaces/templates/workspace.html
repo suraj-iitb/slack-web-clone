@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+body {
+    font-family: Arial;
+    color: black;
+}
+
+.split {
+    height: 100%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+}
+
+.left {
+    left: 0;
+    width: 30%;
+    background-color: #111;
+}
+
+.right {
+    right: 0;
+    width: 80%;
+    background-color: white;
+}
+
+.centered {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.centered img {
+    width: 150px;
+    border-radius: 50%;
+}
+
+.accordion {
+    background-color: #eee;
+    color: #444;
+    cursor: pointer;
+    padding: 18px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    font-weight: bold;
+    outline: none;
+    font-size: 15px;
+    transition: 0.4s;
+}
+
+.active, .accordion:hover {
+    background-color: #EE82EE;
+    color: #FFF;
+
+}
+
+.panel {
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+    overflow: hidden;
+
+}
+
+.header {
+  overflow: hidden;
+  background-color:#111;
+  padding: 20px 10px;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: bold;
+  color: #FFF;
+}
+
+.icon-bar {
+    width: 100%;
+    background-color: #555;
+    overflow: auto;
+}
+
+.icon-bar a{
+    float: left;
+    width: 2em;
+    text-align: center;
+    padding: 0px 0px;
+    transition: all 0.3s ease;
+    color: white;
+    font-size: 2em;
+}
+
+.icon-bar a:hover {
+    background-color: #000;
+}
+
+.active {
+    background-color: #4CAF50;
+}
+
+
+#inputbox {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+.container {
+    border: 2px solid #dedede;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+.darker {
+    border-color: #ccc;
+    background-color: #ddd;
+}
+.container::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+.time-right {
+    float: right;
+    color: #aaa;
+}
+.time-left {
+    float: left;
+    color: #999;
+}
+</style>
+</head>
+<body>
+
+
+
+<div class="w3-sidebar w3-light-grey w3-bar-block" style="width:25%">
+  <h3><div class="w3-bar-item w3-button w3-black">{{request.user}}</div></h3>
+
+  <div>
+    <form action='http://127.0.0.1:8000/workspace/{{id}}/invite/' method='POST'>
+      {% csrf_token %}
+    <input type='text' name='email' style="width:55%">
+    <button class="w3-button w3-blue" style="width:25%">Invite</button>
+
+    </form>
+
+<h6><div class="w3-bar-item w3-button w3-black">Channels</div></h6>
+    {% if isadmin %}
+    <form action='http://127.0.0.1:8000/workspace/{{id}}/create/' method='POST'>
+      {% csrf_token %}
+    <input type='text' name='channel_name' style="width:55%">
+    <button class="w3-button w3-blue">Create</button>
+    </form>
+    {% endif %}
+
+
+    <!-- <a href="#"><i class="fa fa-plus"></i></a> -->
+    <!-- <a href="#"><i class="fa fa-trash"></i></a> -->
+  </div>
+</br>
+{% for ido,chan in channels %}
+  <a href='http://127.0.0.1:8000/workspace/{{id}}/channel/{{ido}}' style="width:55%"  class="3-bar-item w3-button w3-gray" id={{ido}}>{{chan}}</a>
+  {% if isadmin %}<a href='http://127.0.0.1:8000/remove/{{id}}/channel/{{ido}}' style="width:22%" class="3-bar-item w3-button w3-red">remove</a>
+  {% endif %}
+{% endfor %}
+<h6><div href="#" class="w3-bar-item w3-button w3-black">Direct Messages</div></h6>
+{% for idi,user in users %}
+  <a href='http://127.0.0.1:8000/user/{{idi}}' style="width:55%" class="3-bar-item w3-button w3-gray">{{user}}</a>
+  {% if isadmin %}<a href='http://127.0.0.1:8000/remove/user/{{id}}/{{idi}}' style="width:22%" class="3-bar-item w3-button w3-red">remove</a>
+</br>
+  {% endif %}
+{% endfor %}
+    <!-- <button class="accordion">WorkSpace 1</button>
+<div class="icon-bar">
+  <a href="#"><i class="fa fa-user"></i></a>
+  <a href="#"><i class="fa fa-plus"></i></a>
+  <a href="#"><i class="fa fa-trash"></i></a>
+</div>
+
+    <button class="accordion">WorkSpace 2</button>
+    <div class="panel">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+
+    <button class="accordion">WorkSpace 3</button>
+    <div class="panel">
+    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div> -->
+</div>
+
+<div class="split right">
+  <div class="centered">
+
+  </div>
+</div>
+<div class="split right">
+<div id='chatmessages'>
+
+
+
+
+  {% for id,usern,mess in messages %}
+
+    <div class='container' id='{{id}}bp'><b>{{usern}}</b><p>{{mess}}</p></div>
+    <div id='{{id}}b' value="Delete" onClick="send_id(this.id)" class="3-bar-item w3-button w3-red">Delete</div>
+    <a id='{{id}}br' href="http://127.0.0.1:8000/workspace/message/{{id}}" class="3-bar-item w3-button w3-green" >Thread</a>
+  {% endfor %}
+</div>
+<div id="inputbox">
+
+<!-- <form class="w3-container w3-card-4" name='fname'> -->
+    <input id = 'readinput' class="w3-input w3-border" name="last" type="text">
+    <button class="w3-button w3-blue" id="submit-button" type='button'>Send Message</button>
+ <!--    <button class="w3-button w3-blue" type='button' onclick="recievemessage()">Recieve Message</button> -->
+  <!-- </form> -->
+</div>
+</div>
+
+<script>
+// var acc = document.getElementsByClassName("accordion");
+// var i;
+//
+// for (i = 0; i < acc.length; i++) {
+//     acc[i].addEventListener("click", function() {
+//         this.classList.toggle("active");
+//         var panel = this.nextElementSibling;
+//         if (panel.style.display === "block") {
+//             panel.style.display = "none";
+//         } else {
+//             panel.style.display = "block";
+//         }
+//     });
+// }
+//
+//     var channelindex=1;
+//     var messageindex=1;
+//     var workspaceindex=1;
+//      username1 = 'ABHISHEK';
+//      username2 = 'SURAJ' ;
+//      serverinput = 'hello';
+//      receiverinput = 'hi';
+//
+//     function sendmessage()
+//     {
+//       receiverinput = document.forms['fname']['last'].value;
+//       var inputtext = document.createTextNode(receiverinput);
+//       var d = new Date();
+//       var h = d.getHours();
+//  	    var m = d.getMinutes();
+//       var dashcontainer = document.createElement('div');
+//       dashcontainer.setAttribute('class','container');
+//       var user1 = document.createElement('b');
+//       user1.innerHTML=username1;
+//       dashcontainer.appendChild(user1);
+//       var message = document.createElement('p');
+//       message.setAttribute('style','word-wrap:break-all');
+//       message.setAttribute('align','right')
+//       message.appendChild(inputtext);
+//       dashcontainer.appendChild(message);
+//       var time = document.createElement('span');
+//       time.setAttribute('class','time-left')
+//       time.innerHTML='<p>'+h+':'+m+'</p>';
+//       dashcontainer.appendChild(time);
+//       var mydiv = document.getElementById("chatmessages");
+//       mydiv.appendChild(dashcontainer);
+//     }
+//
+//     function recievemessage()
+//     {
+//       var d = new Date();
+//       var h = d.getHours();
+//  	    var m = d.getMinutes();
+//       var dashcontainer = document.createElement('div');
+//       dashcontainer.setAttribute('class','container darker');
+//       var user1 = document.createElement('b');
+//       user1.innerHTML=username2;
+//       dashcontainer.appendChild(user1);
+//       var message = document.createElement('p');
+//       message.setAttribute('style','word-wrap:break-all');
+//       message.setAttribute('align','left')
+//       message.innerHTML=serverinput;
+//       dashcontainer.appendChild(message);
+//       var time = document.createElement('span');
+//       time.setAttribute('class','time-right')
+//       time.innerHTML='<p>'+h+':'+m+'</p>';
+//       dashcontainer.appendChild(time);
+//       var mydiv = document.getElementById("chatmessages");
+//       mydiv.appendChild(dashcontainer);
+//     }
+</script>
+
+<script>
+var roomName = {{ channel_id }};
+
+  var chatSocket = new WebSocket(
+      'ws://' + window.location.host +
+      '/ws/chat/' + roomName + '/');
+  var remChatSocket = new WebSocket(
+    'ws://' + window.location.host +
+    '/ws/chat/delete/' + roomName + '/'
+  );
+
+  var lastid = {{last_id}}
+  chatSocket.onmessage = function(e) {
+      var data = JSON.parse(e.data);
+      var message = data['message'];
+      var email = data['email'];
+      //p tag cretion
+      // console.log(message)
+      var dashcontainer = document.createElement('div');
+      dashcontainer.setAttribute('class','container');
+      var attr1 = document.createAttribute("id");
+      attr1.value = lastid+"bp";
+      dashcontainer.setAttributeNode(attr1)
+      var user1 = document.createElement('b');
+      user1.innerHTML=email;
+      var para = document.createElement("p");
+      para.innerHTML=message;
+      para.setAttribute('style','word-break:break-all');
+      para.setAttribute('align','left')
+      dashcontainer.appendChild(user1);
+      dashcontainer.appendChild(para);
+      //var node = document.createTextNode(email + ":   "+message);
+      //para.appendChild(node);
+      var element = document.getElementById("chatmessages");
+      element.appendChild(dashcontainer);
+
+    // <div id='{{id}}b' value="Delete" onClick="send_id(this.id)" class="3-bar-item w3-button w3-red">Delete</div>
+    // <a id='{{id}}br' href="http://127.0.0.1:8000/workspace/message/{{id}}" class="3-bar-item w3-button w3-green" >Thread</a>
+
+
+      //delete chat
+      var inp = document.createElement("div");
+      var attr1 = document.createAttribute("id");
+      attr1.value = lastid+"b";
+      inp.setAttributeNode(attr1)
+      inp.setAttribute('onclick',"send_id(this.id)")
+      inp.setAttribute('class','3-bar-item w3-button w3-red')
+      inp.innerHTML='Delete'
+      element.appendChild(inp);
+
+      //reply chat
+      var inp1 = document.createElement("a");
+      var ak = document.createAttribute('id');
+      ak.value=lastid+"br"
+      inp1.setAttributeNode(ak)
+      var attr5 = document.createAttribute("href");
+      attr5.value = "http://127.0.0.1:8000/workspace/message/"+lastid;
+      inp1.setAttributeNode(attr5)
+      inp1.innerHTML='Thread'
+      inp1.setAttribute('class','3-bar-item w3-button w3-green')
+
+        element.appendChild(inp1);
+      lastid = lastid + 1
+
+  };
+
+  chatSocket.onclose = function(e) {
+      console.error('Chat socket closed unexpectedly');
+  };
+
+  document.querySelector('#readinput').focus();
+  document.querySelector('#readinput').onkeyup = function(e) {
+      if (e.keyCode === 13) {  // enter, return
+          document.querySelector('#submit-button').click();
+      }
+  };
+
+  document.querySelector('#submit-button').onclick = function(e) {
+      var messageInputDom = document.querySelector('#readinput');
+      var message = messageInputDom.value;
+      chatSocket.send(JSON.stringify({
+          'message': message
+      }));
+
+      messageInputDom.value = '';
+  };
+
+  remChatSocket.onmessage = function(e) {
+        var data = JSON.parse(e.data);
+        var id1 = data['message'];
+        // alert(id1)
+        //p tag cretion
+          var parent = document.getElementById("chatmessages");
+          var child1 = document.getElementById(id1);
+          var child2 = document.getElementById(id1+"p");
+          var child3 = document.getElementById(id1+"r");
+
+          parent.removeChild(child1);
+          parent.removeChild(child2);
+          parent.removeChild(child3);
+
+        // document.querySelector('#chat-log').value += (message + '\n');
+    };
+
+    remChatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+
+    function send_id(id1) {
+      var messid = id1;
+      remChatSocket.send(JSON.stringify({
+        'message': messid,
+      }))
+    };
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!--<html>
+
+<head><title>Login</title></head>
+
+<body>
+  <form method='POST'>
+
+    <p>
+      <label>Username: </label>
+      <input type='text' name='email'>
+    </p>
+
+    <p>
+      <label>Password: </label>
+      <input type='password' name='password'>
+    </p>
+
+    <button type="submit">Login</button>
+  </form>
+
+</body>
+</html> -->
+
+<html>
+<head>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<style>
+      #footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+  </style>
+</head>
+<body>
+<div class="w3-container w3-pale-blue">
+  <h1>SLACK</h1>
+</div>
+<form class="w3-container" method='POST'>
+    {% csrf_token %}
+    <label class="w3-text-blue"><b>Email</b></label>
+    <input class="w3-input w3-border" name="email" style = "width:25%;" type="text">
+
+    <label class="w3-text-blue"><b>Password</b></label>
+    <input class="w3-input w3-border" name="password" style = "width:25%;" type="password"></br>
+    <!--<h6><a href="workspace.html" class="w3-bar-item w3-button w3-grey">LOGIN</a></h6>-->
+    <button type="submit" class="w3-bar-item w3-button w3-grey">Login</button>
+    <div id="footer" class="w3-container w3-pale-blue"></br></br></br>
+    </div>
+    </form>
+  {% block error %}
+    {{error}}
+  {% endblock %}
+</body>
+</html>
